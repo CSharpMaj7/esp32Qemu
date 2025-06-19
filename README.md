@@ -44,7 +44,6 @@ All required packages for building QEMU and supporting tools are listed in the s
 
 ### Run the installation script:
 
-```bash
 chmod +x installDependencies.sh
 ./installDependencies.sh
 
@@ -53,6 +52,7 @@ cd ~
 git clone --recursive https://github.com/espressif/esp-idf.git
 cd esp-idf
 ./install.sh
+#### Important command and must be run in every bash session before running the expressif tools
 . export.sh
 
 
@@ -72,7 +72,7 @@ cd qemu
 ninja -C build
 
 
-## Step 4.5: Install platformio
+## Step 4.5: Setup platformio
 virtualenv platformio-core
 cd platformio-core
 . bin/activate
@@ -81,28 +81,15 @@ pip install --upgrade pip
 
  
 ## Step 5: Download and Build the Tasmota Project
-cd ~ 
+cd ~/platformio-core
 git clone https://github.com/arendst/Tasmota.git
 cd Tasmota
-platformio run -e tasmota32
 
-
-pio run 2>&1 | tee build.log
-
-
-## Step 6: Combine the binary files
-esptool.py --chip esp32 merge_bin \
-  --fill-flash-size 4MB \
-  --flash_mode dio \
-  --flash_freq 40m \
-  --flash_size 4MB \
-  -o flash_image.bin \
-  0x1000  ~/platformio-core/Tasmota/.pio/build/tasmota32/bootloader.bin \
-  0x8000  ~/platformio-core/Tasmota/.pio/build/tasmota32/partitions.bin \
-  0xe000  ~/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin \
-  0x10000 ~/platformio-core/Tasmota/variants/tasmota/tasmota32-safeboot.bin \
-  0xe0000 ~/platformio-core/Tasmota/.pio/build/tasmota32/firmware.bin
-
+pio run -t clean
+pio run -e tasmota32
+//pio run 2>&1 | tee build.log
+//platformio run -e tasmota32
+deactivate
 
 #### Ensure your ESP-IDF environment from Step 3 is active
 idf.py set-target esp32
@@ -115,7 +102,7 @@ Component config  --->
       set value to 200
 idf.py build
 
-###  Step 6: Run the Tasmota Project in Qemu
+###  Step 7: Combine the binary files
 
 cd ~ 
 mkdir working
@@ -136,5 +123,9 @@ esptool.py --chip esp32 merge_bin \
   -M esp32 \
   -m 4M \
   -drive file=flash_image.bin,format=raw,if=mtd \
-  -global driver=esp32.spi_flash,property=drive,value=flash
+  -global driver=esp32.spi_flash,property=drive,value=flash \
+  -global driver=timer.esp32.timg,property=wdt_disable,value=true\
+  -nic user,model=open_eth \ 
+  -display sdl \
+  -serial stdio
 
