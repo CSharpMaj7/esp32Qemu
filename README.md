@@ -31,45 +31,36 @@ sudo apt upgrade -y
 
 ###install git onto the ubuntu machine :
 
-sudo apt install -y git 
-
+<pre>sudo apt install -y git 
+</pre>
 ###clone this project into the home foolder:
-cd ~
+<pre>cd ~
 git clone https://github.com/CSharpMaj7/esp32Qemu.git
-
+</pre>
 ###cd into the project 
-cd esp32Qemu
-
+<pre>cd esp32Qemu
+</pre>
 ## Step 2: Install Build Dependencies
 
 All required packages for building QEMU and supporting tools are listed in the script below.
 
 ### Run the installation script
-
-chmod +x installDependencies.sh
-
+<pre>chmod +x installDependencies.sh
 ./installDependencies.sh
-
+</pre>
 ## Step 3: Install the Espressif ESP-IDF
-cd ~ 
-
+<pre>cd ~ 
 git clone --recursive https://github.com/espressif/esp-idf.git
-
 cd esp-idf
-
 ./install.sh
-
-#### Important command and must be run in every bash session before running the expressif tools
+# Important command and must be run in every bash session before running the expressif tools
 . export.sh
-
+</pre>
 
 ## Step 4: Clone and Build the Espressif QEMU Fork
-cd ~ 
-
+<pre>cd ~ 
 git clone https://github.com/espressif/qemu.git
-
 cd qemu
-
 ./configure --target-list=xtensa-softmmu \
     --enable-gcrypt \
     --enable-slirp \
@@ -78,42 +69,28 @@ cd qemu
     --disable-strip --disable-user \
     --disable-capstone --disable-vnc \
     --disable-gtk
-    
 ninja -C build
-
+</pre>
 
 ## Step 4.5: Setup platformio
-virtualenv platformio-core
-
+<pre>virtualenv platformio-core
 cd platformio-core
-
 . bin/activate
-
 pip install -U platformio
-
 pip install --upgrade pip
-
+</pre>
  
 ## Step 5: Download and Build the Tasmota Project
-cd ~/platformio-core
-
+<pre>cd ~/platformio-core
 git clone https://github.com/arendst/Tasmota.git
-
 cd Tasmota
-
-
 rm -rf .pio
-
 pio run -t clean
-
 pio run -e tasmota32
-
 //pio run 2>&1 | tee build.log
-
 //platformio run -e tasmota32
-
 deactivate
-
+</pre>
 #### Ensure your ESP-IDF environment from Step 3 is active
 idf.py set-target esp32
 sed -i 's/^CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_MAX_CERTS=.*/CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_MAX_CERTS=200/' sdkconfig
@@ -127,10 +104,8 @@ idf.py build
 
 ###  Step 7: Combine the binary files
 
-cd ~ 
-
+<pre>cd ~ 
 mkdir working
-
 esptool.py --chip esp32 merge_bin \
   --fill-flash-size 4MB \
   --flash_mode dio \
@@ -153,4 +128,4 @@ esptool.py --chip esp32 merge_bin \
   -nic user,model=open_eth \ 
   -display sdl \
   -serial stdio
-
+</pre>
