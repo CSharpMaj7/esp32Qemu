@@ -1,32 +1,140 @@
-# esp32Qemu
-#Project to emulate an esp32 firmware in QEMU and run fuzzing software on the emulated device. 
+This project aims to emulate the Tasmota ESP32 firmware using the ESP32-capable fork of QEMU provided by Espressif. The goal is to create a reproducible environment to run and test Tasmota firmware in a virtualized setup without real hardware.
 
-#First Step is to download and install ubuntu 24.04 using a virtualmachine platform or something similar
+---
 
-#After install ubuntu run update and upgrade
+## Project Overview
+
+1. Install Ubuntu 24.04 on a virtual machine or other environment
+2. Install required build dependencies
+3. Download and install the Espressif ESP-IDF (`idf.py`)
+4. Clone and compile the Espressif fork of QEMU
+5. Download and build Tasmota firmware for ESP32
+6. Emulate the firmware using QEMU
+
+---
+
+## Prerequisites
+
+- A system running **Ubuntu 24.04** (VM, WSL2, bare metal, etc.)
+- Internet access
+
+---
+
+## Step 1: Install Ubuntu 24.04
+
+Use any virtualization platform (VirtualBox, VMware, KVM, WSL2, etc.) to install a clean copy of **Ubuntu 24.04**. A minimum of 4GB RAM and 2 CPUs is recommended.
+
+###After install ubuntu run update and upgrade
 sudo apt update 
 sudo apt upgrade -y 
 
-#install git onto the ubuntu machine 
+###install git onto the ubuntu machine 
 sudo apt install -y git 
 
-#clone this project into the home foolder
+###clone this project into the home foolder
 cd ~
 git clone https://github.com/CSharpMaj7/esp32Qemu.git
 
-#cd into the project 
+###cd into the project 
 cd esp32Qemu
 
-# run the installDependencies.sh script
-sudo ./installDependencies.sh 
+## Step 2: Install Build Dependencies
 
-# cd back out into the home folder 
+All required packages for building QEMU and supporting tools are listed in the script below.
+
+### Run the installation script:
+
+```bash
+chmod +x installDependencies.sh
+./installDependencies.sh
+
+## Step 3: Install the Espressif ESP-IDF
 cd ~ 
-#Clone the espressif fork of qemu
+git clone --recursive https://github.com/espressif/esp-idf.git
+cd esp-idf
+./install.sh
+. export.sh
+
+
+## Step 4: Clone and Build the Espressif QEMU Fork
+cd ~ 
 git clone https://github.com/espressif/qemu.git
-
-#enter into the qemu directory
 cd qemu
+./configure --target-list=xtensa-softmmu \
+    --enable-gcrypt \
+    --enable-slirp \
+    --enable-debug \
+    --enable-sdl \
+    --disable-strip --disable-user \
+    --disable-capstone --disable-vnc \
+    --disable-gtk
+    
+ninja -C build
 
-# update the sub modules. This part may take a while
-git submodule update --init --recursive
+
+## Step 4.5: Install platformio
+virtualenv platformio-core
+cd platformio-core
+. bin/activate
+pip install -U platformio
+pip install --upgrade pip
+
+ 
+## Step 5: Download and Build the Tasmota Project
+cd ~ 
+git clone https://github.com/arendst/Tasmota.git
+cd Tasmota
+platformio run -e tasmota32
+
+
+pio run 2>&1 | tee build.log
+
+
+## Step 6: Combine the binary files
+esptool.py --chip esp32 merge_bin \
+  --fill-flash-size 4MB \
+  --flash_mode dio \
+  --flash_freq 40m \
+  --flash_size 4MB \
+  -o flash_image.bin \
+  0x1000  ~/platformio-core/Tasmota/.pio/build/tasmota32/bootloader.bin \
+  0x8000  ~/platformio-core/Tasmota/.pio/build/tasmota32/partitions.bin \
+  0xe000  ~/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin \
+  0x10000 ~/platformio-core/Tasmota/variants/tasmota/tasmota32-safeboot.bin \
+  0xe0000 ~/platformio-core/Tasmota/.pio/build/tasmota32/firmware.bin
+
+
+#### Ensure your ESP-IDF environment from Step 3 is active
+idf.py set-target esp32
+sed -i 's/^CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_MAX_CERTS=.*/CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_MAX_CERTS=200/' sdkconfig
+idf.py menuconfig
+Component config  --->
+  mbedTLS  --->
+    Certificate Bundle  --->
+      Max number of certificates in bundle
+      set value to 200
+idf.py build
+
+###  Step 6: Run the Tasmota Project in Qemu
+
+cd ~ 
+mkdir working
+esptool.py --chip esp32 merge_bin \
+  --fill-flash-size 4MB \
+  --flash_mode dio \
+  --flash_freq 40m \
+  --flash_size 4MB \
+  -o flash_image.bin \
+  0x1000  ~/platformio-core/Tasmota/.pio/build/tasmota32/bootloader.bin \
+  0x8000  ~/platformio-core/Tasmota/.pio/build/tasmota32/partitions.bin \
+  0xe000  ~/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin \
+  0x10000 ~/platformio-core/Tasmota/variants/tasmota/tasmota32-safeboot.bin \
+  0xe0000 ~/platformio-core/Tasmota/.pio/build/tasmota32/firmware.bin
+
+~/qemu/build/qemu-system-xtensa \
+  -nographic \
+  -M esp32 \
+  -m 4M \
+  -drive file=flash_image.bin,format=raw,if=mtd \
+  -global driver=esp32.spi_flash,property=drive,value=flash
+
