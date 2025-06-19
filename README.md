@@ -24,11 +24,11 @@ This project aims to emulate the Tasmota ESP32 firmware using the ESP32-capable 
 
 Use any virtualization platform (VirtualBox, VMware, KVM, WSL2, etc.) to install a clean copy of **Ubuntu 24.04**. A minimum of 4GB RAM and 2 CPUs is recommended.
 
-###After install ubuntu run update and upgrade
-<pre> ```bash
+###After install ubuntu run update and upgrade:
+<pre> 
 sudo apt update 
 sudo apt upgrade -y 
- ``` </pre>
+</pre>
 ###install git onto the ubuntu machine 
 
 sudo apt install -y git 
