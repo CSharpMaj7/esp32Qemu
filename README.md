@@ -42,7 +42,7 @@ cd esp32Qemu
 
 All required packages for building QEMU and supporting tools are listed in the script below.
 
-### Run the installation script:
+### Run the installation script
 
 chmod +x installDependencies.sh
 ./installDependencies.sh
@@ -85,6 +85,7 @@ cd ~/platformio-core
 git clone https://github.com/arendst/Tasmota.git
 cd Tasmota
 
+rm -rf .pio
 pio run -t clean
 pio run -e tasmota32
 //pio run 2>&1 | tee build.log
