@@ -45,6 +45,7 @@ All required packages for building QEMU and supporting tools are listed in the s
 ### Run the installation script
 
 chmod +x installDependencies.sh
+
 ./installDependencies.sh
 
 ## Step 3: Install the Espressif ESP-IDF
