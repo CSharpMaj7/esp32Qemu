@@ -25,17 +25,15 @@ This project aims to emulate the Tasmota ESP32 firmware using the ESP32-capable 
 Use any virtualization platform (VirtualBox, VMware, KVM, WSL2, etc.) to install a clean copy of **Ubuntu 24.04**. A minimum of 4GB RAM and 2 CPUs is recommended.
 
 ###After install ubuntu run update and upgrade:
-<pre> 
 sudo apt update 
 sudo apt upgrade -y 
-</pre>
-###install git onto the ubuntu machine 
+
+###install git onto the ubuntu machine :
 
 sudo apt install -y git 
 
-###clone this project into the home foolder
+###clone this project into the home foolder:
 cd ~
-
 git clone https://github.com/CSharpMaj7/esp32Qemu.git
 
 ###cd into the project 
