@@ -120,7 +120,7 @@ esptool.py --chip esp32 merge_bin \
   0x10000 ~/platformio-core/Tasmota/variants/tasmota/tasmota32-safeboot.bin \
   0xe0000 ~/platformio-core/Tasmota/.pio/build/tasmota32/firmware.bin
 
-~/qemu/build/qemu-system-xtensa \
+~/qemu/build/qemu-system-xtensa\
   -nographic \
   -M esp32 \
   -m 4M \
