@@ -73,7 +73,8 @@ ninja -C build
 </pre>
 
 ## Step 4.5: Setup platformio
-<pre>virtualenv platformio-core
+<pre>cd ~
+virtualenv platformio-core
 cd platformio-core
 . bin/activate
 pip install -U platformio
@@ -106,6 +107,7 @@ idf.py build
 
 <pre>cd ~ 
 mkdir working
+cd working
 esptool.py --chip esp32 merge_bin \
   --fill-flash-size 4MB \
   --flash_mode dio \
