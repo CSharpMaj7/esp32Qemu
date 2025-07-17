@@ -210,13 +210,13 @@ Then follow these steps in the GUI:
    ![Step 4](images/step4_loadBoardDemo.png)  
 4. Open the **File** tab → **Load Bin**  
    ![Step 5](images/step5_loadBinary.png)  
-5. Select the `flash_image.bin` file  
+5. Select the `flash_image.bin` binary that was created and saved in the ~/working folder. 
    ![Step 6](images/step6_selectBinary.png)
 
 Once loaded, Tasmota should run and the Terminal can be used to run the 
 command line interface commands. 
 
-![Firmware Running](esp32Qemu/images/step7_firmwareIsRunning.png)
+![Firmware Running](images/step7_firmwareIsRunning.png)
 
  Command reference: https://tasmota.github.io/docs/Commands/#control
 
