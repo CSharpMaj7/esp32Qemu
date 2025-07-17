@@ -261,12 +261,61 @@ cd working
 ## *** Optional Content: Section 2  ***  
 ## ************************************
 
-### Running Home Assistant (Raspberry Pi Image)
-
-Download and decompress Home Assistant OS image for Raspberry Pi:
-
-<pre>[unchanged block]</pre>
-
 ### Install QEMU for ARM Targets
 
-<pre>[unchanged block]</pre>
+<pre>
+sudo apt install -y qemu-system-arm qemu-system-aarch64 qemu-utils curl
+</pre>
+
+### Running Home Assistant (Raspberry Pi Image)
+
+Download and uncompress Home Assistant OS image for Raspberry Pi:
+
+<pre>cd ~ 
+mkdir -p homeAssistant
+cd homeAssistant
+
+wget https://github.com/home-assistant/operating-system/releases/download/11.5/haos_rpi4-11.5.img.xz
+xz -d haos_rpi4-11.5.img.xz
+</pre>
+
+### Convert the binary into a QEMU accepted format 
+
+<pre>
+qemu-img convert -f raw -O qcow2 haos_rpi4-11.5.img haos_rpi4.qcow2
+</pre>
+
+### Run the HomeAssistant in QEMU
+
+Not working at the moment
+<pre>
+qemu-system-aarch64 \
+  -M virt -cpu cortex-a72 -m 2048 \
+  -drive file=haos_rpi4.qcow2,format=qcow2,if=virtio \
+  -netdev user,id=net0,hostfwd=tcp::8123-:8123 \
+  -device virtio-net-device,netdev=net0 \
+  -nographic
+</pre>
+
+### Determine that the web page is accessable
+
+In another terminal than the one running QEMU
+<pre>
+curl http://localhost:8123
+</pre>
+
+### Run a HTTP Fuzzer 
+
+In another terminal than the one running QEMU
+<pre>
+wfuzz -c -z file,/usr/share/seclists/Discovery/Web-Content/common.txt --hc 404 http://localhost:8123/FUZZ
+</pre>
+
+### Check for HTTP server crashes
+
+In the QEMU terminal, use the journal system to check for HTTP server 
+crashes
+
+<pre>
+journalctl -fu supervisor
+</pre>
