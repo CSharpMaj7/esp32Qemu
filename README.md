@@ -301,14 +301,12 @@ qemu-system-aarch64 \
 
 In another terminal than the one running QEMU
 <pre>
-curl http://localhost:8123
 </pre>
 
 ### Run a HTTP Fuzzer 
 
 In another terminal than the one running QEMU
 <pre>
-wfuzz -c -z file,/usr/share/seclists/Discovery/Web-Content/common.txt --hc 404 http://localhost:8123/FUZZ
 </pre>
 
 ### Check for HTTP server crashes
@@ -317,5 +315,4 @@ In the QEMU terminal, use the journal system to check for HTTP server
 crashes
 
 <pre>
-journalctl -fu supervisor
 </pre>
