@@ -37,17 +37,6 @@ sudo apt upgrade -y
 <pre>sudo apt install -y git 
 </pre>
 
-### Clone this project into the home folder:
-
-<pre>cd ~
-git clone https://github.com/CSharpMaj7/esp32Qemu.git
-</pre>
-
-### Navigate into the project folder:
-
-<pre>cd esp32Qemu
-</pre>
-
 ---
 
 ## Step 2: Install Build Dependencies
@@ -139,6 +128,8 @@ bscripts/build_all_and_install.sh
 
 PlatformIO is used to build the Tasmota firmware.
 
+Reference: https://tasmota.github.io/docs/PlatformIO-CLI/
+
 <pre>cd ~
 virtualenv platformio-core
 cd platformio-core
@@ -151,8 +142,11 @@ pip install --upgrade pip
 
 ## Step 7: Build the Tasmota Firmware
 
-This downloads and compiles the smart home firmware source.  
+ This downloads and compiles the smart home firmware source. 
+ Specifically the tasmota32 variant which works with QEMU.  
  Ensure the ESP-IDF environment is active (`. ./export.sh`) before building.
+
+ Reference: https://tasmota.github.io/docs/Compile-your-build/#defining-multiple-custom-firmwares
 
 <pre>cd ~/platformio-core
 git clone https://github.com/arendst/Tasmota.git
