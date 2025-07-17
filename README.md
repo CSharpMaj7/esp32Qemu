@@ -73,7 +73,8 @@ ninja -C build
 </pre>
 
 ## Step 4.5: Setup platformio
-<pre>virtualenv platformio-core
+<pre>cd ~ 
+virtualenv platformio-core
 cd platformio-core
 . bin/activate
 pip install -U platformio
@@ -129,3 +130,26 @@ esptool.py --chip esp32 merge_bin \
   -display sdl \
   -serial stdio
 </pre>
+
+
+
+git clone --depth=1 https://github.com/lcgamboa/picsimlab.git
+cd picsimlab
+bscripts/build_all_and_install.sh
+
+
+sudo apt-get install iw
+
+picsimlab 
+
+~/picsimlab/build_all/qemu/build/qemu-system-xtensa \
+-M esp32-picsimlab \
+-L /usr/lib/picsimlab//qemu/fw/ \
+-drive file=/home/ubuntu/.picsimlab/mdump_ESP32_DevKitC_ESP32.bin,if=mtd,format=raw \
+-drive file=/home/ubuntu/.picsimlab/mdump_ESP32_DevKitC_ESP32.efuse,if=none,format=raw,id=efuse \
+-global driver=nvram.esp32.efuse,property=drive,value=efuse \
+-nic user,model=esp32_wifi,id=u1,net=192.168.4.0/24 \
+-global driver=timer.esp32.timg,property=wdt_disable,value=true \
+-nic user,model=open_eth,id=u2,net=192.168.3.0/24 \
+
+
