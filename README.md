@@ -73,7 +73,11 @@ ninja -C build
 </pre>
 
 ## Step 4.5: Setup platformio
+<<<<<<< HEAD
 <pre>cd ~ 
+=======
+<pre>cd ~
+>>>>>>> 5ceb9b38ea354e23da035587fddbaedc03757dff
 virtualenv platformio-core
 cd platformio-core
 . bin/activate
@@ -107,6 +111,7 @@ idf.py build
 
 <pre>cd ~ 
 mkdir working
+cd working
 esptool.py --chip esp32 merge_bin \
   --fill-flash-size 4MB \
   --flash_mode dio \
@@ -118,17 +123,9 @@ esptool.py --chip esp32 merge_bin \
   0xe000  ~/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin \
   0x10000 ~/platformio-core/Tasmota/variants/tasmota/tasmota32-safeboot.bin \
   0xe0000 ~/platformio-core/Tasmota/.pio/build/tasmota32/firmware.bin
+    
+~/qemu/build/qemu-system-xtensa -nographic -M esp32 -m 4M -drive file=flash_image.bin,format=raw,if=mtd -global driver=esp32.spi_flash,property=drive,value=flash -global driver=timer.esp32.timg,property=wdt_disable,value=true -nic user,model=open_eth -display sdl 
 
-~/qemu/build/qemu-system-xtensa \
-  -nographic \
-  -M esp32 \
-  -m 4M \
-  -drive file=flash_image.bin,format=raw,if=mtd \
-  -global driver=esp32.spi_flash,property=drive,value=flash \
-  -global driver=timer.esp32.timg,property=wdt_disable,value=true\
-  -nic user,model=open_eth \ 
-  -display sdl \
-  -serial stdio
 </pre>
 
 
