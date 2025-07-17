@@ -198,20 +198,20 @@ picsimlab
 </pre>
 
 When picsimlab starts up, the GUI will look like the following. 
-![GUI View](esp32Qemu/images/step1_picsimlabDefualt.png) 
+![GUI View](images/step1_picsimlabDefualt.png) 
 
 Then follow these steps in the GUI:
 
 1. Open the **Board** tab  
-   ![Step 2](esp32Qemu/images/step2_boardSelection.png)  
+   ![Step 2](images/step2_boardSelection.png)  
 2. Select **ESP32-DevKitC**  
-   ![Step 3](esp32Qemu/images/step3_selectEsp32board.png)  
+   ![Step 3](images/step3_selectEsp32board.png)  
 3. Open the **File** tab → **Load Board Demo**  
-   ![Step 4](esp32Qemu/images/step4_loadBoardDemo.png)  
+   ![Step 4](images/step4_loadBoardDemo.png)  
 4. Open the **File** tab → **Load Bin**  
-   ![Step 5](esp32Qemu/images/step5_loadBinary.png)  
+   ![Step 5](images/step5_loadBinary.png)  
 5. Select the `flash_image.bin` file  
-   ![Step 6](esp32Qemu/images/step6_selectBinary.png)
+   ![Step 6](images/step6_selectBinary.png)
 
 Once loaded, Tasmota should run and the Terminal can be used to run the 
 command line interface commands. 
