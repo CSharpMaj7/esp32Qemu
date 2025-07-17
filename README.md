@@ -46,7 +46,7 @@ Install all required packages for building QEMU and supporting tools. These are 
 - [Espressif QEMU Toolchain Guide](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/tools/qemu.html)  
 - [QEMU Build Environment Guide](https://www.qemu.org/docs/master/devel/build-environment.html)  
 - [ESP-IDF Toolchain Setup](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/tools/idf-py.html)
-- [ESP32 Embedded System Testing]https://alexconesa.wordpress.com/2025/01/17/speeding-up-esp32-embedded-system-testing-with-qemu-on-ubuntu/
+- [ESP32 Embedded System Testing](https://alexconesa.wordpress.com/2025/01/17/speeding-up-esp32-embedded-system-testing-with-qemu-on-ubuntu/)
 
 
 <pre>sudo apt update 
